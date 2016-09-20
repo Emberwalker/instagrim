@@ -8,7 +8,8 @@ Built on the sources of the original
 Just want to run the thing locally? These commands spin up an embedded instance
 of Tomcat 8 on port 8880, with context path `/Instagrim` which can be killed by
 pressing any key after the prompt. This also theoretically performs hot-reload
-when any part of the project is changed.
+when any part of the project is changed. Note that you still need a working
+instance of Cassandra listening on localhost for this to work!
 
 - Windows: `.\gradlew.bat appRun`
 - Mac/Linux: `./gradlew appRun`
