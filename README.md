@@ -1,9 +1,18 @@
 # Instagrim
 AC32007 Secure Internet Programming (University of Dundee)
 
+## Running
+Just want to run the thing locally? These commands spin up an embedded instance
+of Tomcat 8 on port 8880, with context path `/Instagrim` which can be killed by
+pressing any key after the prompt. This also theoretically performs hot-reload
+when any part of the project is changed.
+
+- Windows: `.\gradlew.bat appRun`
+- Mac/Linux: `./gradlew appRun`
+
 ## Building
 If you have `gradle` >= 3.0, you can use your locally installed installation,
-else use the wrapper as below.
+else use the wrapper as below. Build artifacts are placed in `build/libs`
 
 - Windows: `.\gradlew.bat build`
 - Mac/Linux: `./gradlew build`
