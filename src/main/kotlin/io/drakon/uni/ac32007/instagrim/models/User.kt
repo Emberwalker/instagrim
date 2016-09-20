@@ -13,10 +13,11 @@ import io.drakon.uni.ac32007.instagrim.lib.AeSimpleSHA1
 
 
 class User {
+    // FIXME: Make this non-nullable.
     internal var cluster: Cluster? = null
 
     fun RegisterUser(username: String, Password: String): Boolean {
-        var EncodedPassword: String? = null
+        val EncodedPassword: String
         try {
             EncodedPassword = AeSimpleSHA1.SHA1(Password)
         } catch (et: UnsupportedEncodingException) {
@@ -27,8 +28,8 @@ class User {
             return false
         }
 
-        if (cluster == null) throw RuntimeException("RegisterUser with null cluster!")
-        val session = cluster!!.connect("instagrim")
+        if (cluster == null) throw RuntimeException("RegisterUser with null cluster!") // FIXME: Remove.
+        val session = cluster!!.connect("instagrim") // FIXME: Use nonnullable reference
         val ps = session.prepare("insert into userprofiles (login,password) Values(?,?)")
 
         val boundStatement = BoundStatement(ps)
@@ -41,7 +42,7 @@ class User {
     }
 
     fun IsValidUser(username: String, Password: String): Boolean {
-        var EncodedPassword: String? = null
+        val EncodedPassword: String
         try {
             EncodedPassword = AeSimpleSHA1.SHA1(Password)
         } catch (et: UnsupportedEncodingException) {
@@ -52,12 +53,12 @@ class User {
             return false
         }
 
-        if (cluster == null) throw RuntimeException("RegisterUser with null cluster!")
-        val session = cluster!!.connect("instagrim")
+        if (cluster == null) throw RuntimeException("RegisterUser with null cluster!") // FIXME: Remove.
+        val session = cluster!!.connect("instagrim") // FIXME: Use nonnullable reference
         val ps = session.prepare("select password from userprofiles where login =?")
-        var rs: ResultSet? = null
         val boundStatement = BoundStatement(ps)
-        rs = session.execute(// this is where the query is executed
+        // TODO: Look at making this not-nullable or smart castable
+        val rs = session.execute(// this is where the query is executed
                 boundStatement.bind(// here you are binding the 'boundStatement'
                         username))
         if (rs!!.isExhausted) {
@@ -65,9 +66,8 @@ class User {
             return false
         } else {
             for (row in rs) {
-
                 val StoredPass = row.getString("password")
-                if (StoredPass.compareTo(EncodedPassword!!) == 0)
+                if (StoredPass.compareTo(EncodedPassword) == 0)
                     return true
             }
         }

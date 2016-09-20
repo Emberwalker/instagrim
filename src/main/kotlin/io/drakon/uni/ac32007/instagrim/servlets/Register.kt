@@ -14,11 +14,12 @@ import io.drakon.uni.ac32007.instagrim.models.User
 
 @WebServlet(name = "Register", urlPatterns = arrayOf("/Register"))
 class Register : HttpServlet() {
+
+    // FIXME: Make not nullable
     internal var cluster: Cluster? = null
 
     @Throws(ServletException::class)
     override fun init(config: ServletConfig) {
-        // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster()
     }
 
@@ -36,10 +37,10 @@ class Register : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster!!)
+        us.setCluster(cluster!!) // FIXME: Pass non-nullable reference
         us.RegisterUser(username, password)
 
-        response.sendRedirect("/Instagrim")
+        response.sendRedirect("/Instagrim") // FIXME: Make relative to container root.
 
     }
 
@@ -48,7 +49,7 @@ class Register : HttpServlet() {
      * @return a String containing servlet description
      */
     override fun getServletInfo(): String {
-        return "Short description"
+        return "Short description" // FIXME: Change this.
     }
 
 }

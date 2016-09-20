@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
@@ -20,31 +14,22 @@ import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
 import io.drakon.uni.ac32007.instagrim.models.User
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
 
-/**
-
- * @author Administrator
- */
 @WebServlet(name = "Login", urlPatterns = arrayOf("/Login", "/Login/*"))
 class Login : HttpServlet() {
 
+    // FIXME: Make this not nullable.
     internal var cluster: Cluster? = null
-
 
     @Throws(ServletException::class)
     override fun init(config: ServletConfig) {
-        // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster()
     }
 
     /**
      * Handles the HTTP `POST` method.
-
      * @param request servlet request
-     * *
      * @param response servlet response
-     * *
      * @throws ServletException if a servlet-specific error occurs
-     * *
      * @throws IOException if an I/O error occurs
      */
     @Throws(ServletException::class, IOException::class)
@@ -70,7 +55,7 @@ class Login : HttpServlet() {
             rd.forward(request, response)
 
         } else {
-            response.sendRedirect("/Instagrim/login.jsp")
+            response.sendRedirect("/Instagrim/login.jsp") // FIXME: Make relative to container
         }
 
     }
@@ -81,7 +66,7 @@ class Login : HttpServlet() {
      * @return a String containing servlet description
      */
     override fun getServletInfo(): String {
-        return "Short description"
-    }// </editor-fold>
+        return "Short description" // FIXME: Change this.
+    }
 
 }
