@@ -1,6 +1,9 @@
 # Instagrim
 AC32007 Secure Internet Programming (University of Dundee)
 
+Built on the sources of the original
+[acobley/Instagrim](https://github.com/acobley/Instagrim) repository
+
 ## Running
 Just want to run the thing locally? These commands spin up an embedded instance
 of Tomcat 8 on port 8880, with context path `/Instagrim` which can be killed by
