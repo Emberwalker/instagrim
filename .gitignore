@@ -1,1 +1,37 @@
+# acobley
 /target/
+
+# Robert T (Emberwalker)
+# Based on Pulsar gitignore (https://github.com/Emberwalker/Pulsar/blob/master/.gitignore)
+
+# JVM bytecode
+*.class
+
+# Vim backups
+*~
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+/build/
+!/gradle/wrapper/*.jar
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# General test run stuff
+/run/
+/out/
+
