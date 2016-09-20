@@ -54,7 +54,7 @@ class Login : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster)
+        us.setCluster(cluster!!)
         val isValid = us.IsValidUser(username, password)
         val session = request.session
         println("Session in servlet " + session)

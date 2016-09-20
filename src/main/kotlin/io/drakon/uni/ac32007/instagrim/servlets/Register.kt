@@ -36,7 +36,7 @@ class Register : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster)
+        us.setCluster(cluster!!)
         us.RegisterUser(username, password)
 
         response.sendRedirect("/Instagrim")
