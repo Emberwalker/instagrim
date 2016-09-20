@@ -1,4 +1,4 @@
-package uk.ac.dundee.computing.aec.instagrim.lib;
+package io.drakon.uni.ac32007.instagrim.lib;
 
 import java.util.ArrayList;
 import java.util.List;

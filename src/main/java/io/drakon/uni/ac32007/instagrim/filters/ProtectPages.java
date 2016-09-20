@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package uk.ac.dundee.computing.aec.instagrin.filters;
+package io.drakon.uni.ac32007.instagrim.filters;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -21,7 +21,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
+
+import io.drakon.uni.ac32007.instagrim.stores.LoggedIn;
 
 /**
  *

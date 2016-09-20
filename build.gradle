@@ -9,7 +9,6 @@ buildscript {
 }
 
 repositories {
-  //maven { url "http://repo.maven.apache.org/maven2" }
   mavenCentral()
 }
 
@@ -29,7 +28,7 @@ dependencies {
   providedCompile group: 'javax', name: 'javaee-web-api', version:'7.0'
 }
 
-group = 'uk.ac.dundee.computing.aec'
+group = 'io.drakon.uni.ac32007.instagrim'
 version = '1.0-SNAPSHOT'
 
 description = "Instagrim"

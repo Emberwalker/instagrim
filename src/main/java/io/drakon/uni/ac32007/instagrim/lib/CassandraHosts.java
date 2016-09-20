@@ -1,11 +1,9 @@
-package uk.ac.dundee.computing.aec.instagrim.lib;
+package io.drakon.uni.ac32007.instagrim.lib;
 
 import com.datastax.driver.core.*;
 
 import java.util.Iterator;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ********************************************************

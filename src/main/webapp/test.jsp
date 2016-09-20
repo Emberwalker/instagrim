@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
+<%@ page import="io.drakon.uni.ac32007.instagrim.stores.*" %>
 <!DOCTYPE html>
 <html>
     <head>
