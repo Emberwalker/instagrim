@@ -36,7 +36,7 @@ class Register : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster) // FIXME: Pass non-nullable reference
+        us.setCluster(cluster)
         us.RegisterUser(username, password)
 
         response.sendRedirect("/Instagrim") // FIXME: Make relative to container root.

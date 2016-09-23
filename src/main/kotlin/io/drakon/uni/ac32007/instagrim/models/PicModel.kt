@@ -37,10 +37,6 @@ class PicModel {
 
     lateinit internal var cluster: Cluster
 
-    fun PicModel() {
-
-    }
-
     fun setCluster(cluster: Cluster) {
         this.cluster = cluster
     }
@@ -54,6 +50,7 @@ class PicModel {
             val picid = Convertors.getTimeUUID()
 
             //The following is a quick and dirty way of doing this, will fill the disk quickly !
+            // TODO: UNIX only, make work elsewhere
             val success = File("/var/tmp/instagrim/").mkdirs()
             val output = FileOutputStream(File("/var/tmp/instagrim/" + picid))
 
@@ -193,7 +190,7 @@ class PicModel {
 
         session.close()
         val p = Pic()
-        p.setPic(bImage, length, type)
+        p.setPic(bImage!!, length, type!!)
 
         return p
 

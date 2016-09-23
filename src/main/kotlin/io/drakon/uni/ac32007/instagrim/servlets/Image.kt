@@ -45,13 +45,11 @@ class Image : HttpServlet() {
 
     @Throws(ServletException::class)
     override fun init(config: ServletConfig) {
-        // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster()
     }
 
     @Throws(ServletException::class, IOException::class)
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
-        // TODO Auto-generated method stub
         val args = Convertors.SplitRequestPath(request)
         val command: Int
         try {
