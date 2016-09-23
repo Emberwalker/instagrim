@@ -15,8 +15,7 @@ import io.drakon.uni.ac32007.instagrim.models.User
 @WebServlet(name = "Register", urlPatterns = arrayOf("/Register"))
 class Register : HttpServlet() {
 
-    // FIXME: Make not nullable
-    internal var cluster: Cluster? = null
+    lateinit internal var cluster: Cluster
 
     @Throws(ServletException::class)
     override fun init(config: ServletConfig) {
@@ -37,7 +36,7 @@ class Register : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster!!) // FIXME: Pass non-nullable reference
+        us.setCluster(cluster) // FIXME: Pass non-nullable reference
         us.RegisterUser(username, password)
 
         response.sendRedirect("/Instagrim") // FIXME: Make relative to container root.

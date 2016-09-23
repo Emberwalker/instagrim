@@ -17,8 +17,7 @@ import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
 @WebServlet(name = "Login", urlPatterns = arrayOf("/Login", "/Login/*"))
 class Login : HttpServlet() {
 
-    // FIXME: Make this not nullable.
-    internal var cluster: Cluster? = null
+    lateinit internal var cluster: Cluster
 
     @Throws(ServletException::class)
     override fun init(config: ServletConfig) {
@@ -39,7 +38,7 @@ class Login : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster!!)
+        us.setCluster(cluster)
         val isValid = us.IsValidUser(username, password)
         val session = request.session
         println("Session in servlet " + session)

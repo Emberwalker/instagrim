@@ -14,7 +14,7 @@ import io.drakon.uni.ac32007.instagrim.lib.AeSimpleSHA1
 
 class User {
     // FIXME: Make this non-nullable.
-    internal var cluster: Cluster? = null
+    lateinit internal var cluster: Cluster
 
     fun RegisterUser(username: String, Password: String): Boolean {
         val EncodedPassword: String
@@ -28,8 +28,7 @@ class User {
             return false
         }
 
-        if (cluster == null) throw RuntimeException("RegisterUser with null cluster!") // FIXME: Remove.
-        val session = cluster!!.connect("instagrim") // FIXME: Use nonnullable reference
+        val session = cluster.connect("instagrim")
         val ps = session.prepare("insert into userprofiles (login,password) Values(?,?)")
 
         val boundStatement = BoundStatement(ps)
@@ -53,8 +52,7 @@ class User {
             return false
         }
 
-        if (cluster == null) throw RuntimeException("RegisterUser with null cluster!") // FIXME: Remove.
-        val session = cluster!!.connect("instagrim") // FIXME: Use nonnullable reference
+        val session = cluster.connect("instagrim")
         val ps = session.prepare("select password from userprofiles where login =?")
         val boundStatement = BoundStatement(ps)
         // TODO: Look at making this not-nullable or smart castable
