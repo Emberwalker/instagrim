@@ -47,7 +47,7 @@ class PicModel {
             val types = Convertors.SplitFiletype(type)
             val buffer = ByteBuffer.wrap(b)
             val length = b.size
-            val picid = Convertors.getTimeUUID()
+            val picid = Convertors.timeUUID
 
             //The following is a quick and dirty way of doing this, will fill the disk quickly !
             // TODO: UNIX only, make work elsewhere
