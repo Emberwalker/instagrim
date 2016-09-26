@@ -1,14 +1,23 @@
 package io.drakon.uni.ac32007.instagrim.lib
 
+import org.slf4j.LoggerFactory
 import java.net.URLDecoder
 import java.util.*
 //import java.util.UUID;
 import javax.servlet.http.HttpServletRequest
 
 object Convertors {
-    var DISPLAY_IMAGE = 0
+    /*var DISPLAY_IMAGE = 0
     var DISPLAY_THUMB = 1
-    var DISPLAY_PROCESSED = 2
+    var DISPLAY_PROCESSED = 2*/
+
+    enum class DISPLAY(val id: Int) {
+        IMAGE(0),
+        THUMB(1),
+        PROCESSED(2)
+    }
+
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     val timeUUID: java.util.UUID
         get() = java.util.UUID.fromString(com.eaio.uuid.UUID().toString())
@@ -121,7 +130,7 @@ object Convertors {
                 args[argv] = URLDecoder.decode(args[argv], "UTF-8")
 
             } catch (et: Exception) {
-                println("Bad URL Encoding" + args[argv])
+                log.error("Bad URL Encoding", et)
             }
 
             argv++
@@ -147,7 +156,7 @@ object Convertors {
                 args[argv] = URLDecoder.decode(args[argv], "UTF-8")
 
             } catch (et: Exception) {
-                println("Bad URL Encoding" + args[argv])
+                log.error("Bad URL Encoding", et)
             }
 
             argv++

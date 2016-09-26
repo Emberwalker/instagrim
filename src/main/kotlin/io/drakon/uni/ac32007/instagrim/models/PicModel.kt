@@ -15,15 +15,15 @@ import java.nio.ByteBuffer
 import java.util.Date
 import javax.imageio.ImageIO
 import org.imgscalr.Scalr.*
+import org.slf4j.LoggerFactory
 
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
-import org.imgscalr.Scalr.Method
-
 import io.drakon.uni.ac32007.instagrim.stores.Pic
 
 class PicModel {
 
     lateinit internal var cluster: Cluster
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     fun setCluster(cluster: Cluster) {
         this.cluster = cluster
@@ -62,7 +62,7 @@ class PicModel {
             session.close()
 
         } catch (ex: IOException) {
-            println("Error --> " + ex)
+            log.error("I/O Error during insertPic", ex)
         }
 
     }
@@ -78,8 +78,8 @@ class PicModel {
             val imageInByte = baos.toByteArray()
             baos.close()
             return imageInByte
-        } catch (et: IOException) {
-
+        } catch (ex: IOException) {
+            log.error("I/O Error during picresize", ex)
         }
 
         return null
@@ -95,8 +95,8 @@ class PicModel {
             val imageInByte = baos.toByteArray()
             baos.close()
             return imageInByte
-        } catch (et: IOException) {
-
+        } catch (ex: IOException) {
+            log.error("I/O Error during pixdecolour", ex)
         }
 
         return null
@@ -112,7 +112,7 @@ class PicModel {
                 boundStatement.bind(// here you are binding the 'boundStatement'
                         User))
         if (rs!!.isExhausted) {
-            println("No Images returned")
+            log.warn("No Images returned")
             return null
         } else {
             for (row in rs) {
@@ -127,51 +127,47 @@ class PicModel {
         return Pics
     }
 
-    fun getPic(image_type: Int, picid: java.util.UUID): Pic? {
+    fun getPic(image_type: Convertors.DISPLAY, picid: java.util.UUID): Pic? {
         val session = cluster.connect("instagrim")
         var bImage: ByteBuffer? = null
         var type: String? = null
         var length = 0
         try {
-            var rs: ResultSet? = null
-            var ps: PreparedStatement? = null
-
-            if (image_type == Convertors.DISPLAY_IMAGE) {
-
-                ps = session.prepare("select image,imagelength,type from pics where picid =?")
-            } else if (image_type == Convertors.DISPLAY_THUMB) {
-                ps = session.prepare("select thumb,imagelength,thumblength,type from pics where picid =?")
-            } else if (image_type == Convertors.DISPLAY_PROCESSED) {
-                ps = session.prepare("select processed,processedlength,type from pics where picid =?")
-            }
-            val boundStatement = BoundStatement(ps!!)
-            rs = session.execute(// this is where the query is executed
+            val ps: PreparedStatement = session.prepare(when (image_type) {
+                Convertors.DISPLAY.IMAGE -> "select image,imagelength,type from pics where picid =?"
+                Convertors.DISPLAY.THUMB -> "select thumb,imagelength,thumblength,type from pics where picid =?"
+                Convertors.DISPLAY.PROCESSED -> "select processed,processedlength,type from pics where picid =?"
+            })
+            val boundStatement = BoundStatement(ps)
+            val rs = session.execute(// this is where the query is executed
                     boundStatement.bind(// here you are binding the 'boundStatement'
                             picid))
 
             if (rs!!.isExhausted) {
-                println("No Images returned")
+                log.warn("No Images returned")
                 return null
             } else {
                 for (row in rs) {
-                    if (image_type == Convertors.DISPLAY_IMAGE) {
-                        bImage = row.getBytes("image")
-                        length = row.getInt("imagelength")
-                    } else if (image_type == Convertors.DISPLAY_THUMB) {
-                        bImage = row.getBytes("thumb")
-                        length = row.getInt("thumblength")
-
-                    } else if (image_type == Convertors.DISPLAY_PROCESSED) {
-                        bImage = row.getBytes("processed")
-                        length = row.getInt("processedlength")
+                    when (image_type) {
+                        Convertors.DISPLAY.IMAGE -> {
+                            bImage = row.getBytes("image")
+                            length = row.getInt("imagelength")
+                        }
+                        Convertors.DISPLAY.THUMB -> {
+                            bImage = row.getBytes("thumb")
+                            length = row.getInt("thumblength")
+                        }
+                        Convertors.DISPLAY.PROCESSED -> {
+                            bImage = row.getBytes("processed")
+                            length = row.getInt("processedlength")
+                        }
                     }
 
                     type = row.getString("type")
-
                 }
             }
         } catch (et: Exception) {
-            println("Can't get Pic" + et)
+            log.error("Error getting Pic", et)
             return null
         }
 

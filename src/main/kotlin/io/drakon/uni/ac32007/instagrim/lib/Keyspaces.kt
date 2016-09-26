@@ -1,8 +1,12 @@
 package io.drakon.uni.ac32007.instagrim.lib
 
 import com.datastax.driver.core.*
+import org.slf4j.LoggerFactory
 
 object Keyspaces {
+
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     fun SetUpKeySpaces(c: Cluster) {
         try {
             //Add some keyspaces here
@@ -52,50 +56,52 @@ object Keyspaces {
                 val boundStatement = BoundStatement(
                         statement)
                 session.execute(boundStatement)
-                println("created instagrim ")
+                log.info("Created instagrim keyspace.")
             } catch (et: Exception) {
-                println("Can't create instagrim " + et)
+                log.error("Error creating instagrim keyspace", et)
             }
 
             //now add some column families
-            println(CreatePicTable)
+            log.debug(CreatePicTable)
 
             try {
                 val cqlQuery = SimpleStatement(CreatePicTable)
                 session.execute(cqlQuery)
             } catch (et: Exception) {
-                println("Can't create tweet table " + et)
+                log.error("Error creating pic table ", et)
             }
 
-            println(Createuserpiclist)
+            log.debug(Createuserpiclist)
 
             try {
                 val cqlQuery = SimpleStatement(Createuserpiclist)
                 session.execute(cqlQuery)
             } catch (et: Exception) {
-                println("Can't create user pic list table " + et)
+                log.error("Error creating user pic list table ", et)
             }
 
-            println(CreateAddressType)
+            log.debug(CreateAddressType)
+
             try {
                 val cqlQuery = SimpleStatement(CreateAddressType)
                 session.execute(cqlQuery)
             } catch (et: Exception) {
-                println("Can't create Address type " + et)
+                log.error("Error creating Address type ", et)
             }
 
-            println(CreateUserProfile)
+            log.debug(CreateUserProfile)
+
             try {
                 val cqlQuery = SimpleStatement(CreateUserProfile)
                 session.execute(cqlQuery)
             } catch (et: Exception) {
-                println("Can't create Address Profile " + et)
+                log.error("Error creating Address Profile ", et)
             }
 
             session.close()
 
         } catch (et: Exception) {
-            println("Other keyspace or coulm definition error" + et)
+            log.error("Unknown error during keyspace/table/type init", et)
         }
 
     }

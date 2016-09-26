@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
+import org.slf4j.LoggerFactory
 
 @WebFilter(filterName = "ProtectPages", urlPatterns = arrayOf("/upload.jsp"), dispatcherTypes = arrayOf(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE))
 class ProtectPages : Filter {
@@ -26,11 +27,11 @@ class ProtectPages : Filter {
     // configured.
     private var filterConfig: FilterConfig? = null
 
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     @Throws(IOException::class, ServletException::class)
     private fun doBeforeProcessing(request: ServletRequest, response: ServletResponse) {
-        if (debug) {
-            log("ProtectPages:DoBeforeProcessing")
-        }
+        log.debug("DoBeforeProcessing")
 
         // Write code here to process the request and/or response before
         // the rest of the filter chain is invoked.
@@ -56,9 +57,7 @@ class ProtectPages : Filter {
 
     @Throws(IOException::class, ServletException::class)
     private fun doAfterProcessing(request: ServletRequest, response: ServletResponse) {
-        if (debug) {
-            log("ProtectPages:DoAfterProcessing")
-        }
+        log.debug("DoAfterProcessing")
 
         // Write code here to process the request and/or response after
         // the rest of the filter chain is invoked.
@@ -80,31 +79,23 @@ class ProtectPages : Filter {
     }
 
     /**
-
      * @param request The servlet request we are processing
-     * *
      * @param response The servlet response we are creating
-     * *
      * @param chain The filter chain we are processing
-     * *
-     * *
      * @exception IOException if an input/output error occurs
-     * *
      * @exception ServletException if a servlet error occurs
      */
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse,
                           chain: FilterChain) {
 
-        if (debug) {
-            log("ProtectPages:doFilter()")
-        }
+        log.debug("doFilter")
 
         doBeforeProcessing(request, response)
-        println("Doing filter")
+        log.debug("Doing filter")
         val httpReq = request as HttpServletRequest
         val session = httpReq.getSession(false)
-        val li = session.getAttribute("LoggedIn") as LoggedIn
+        val li = session.getAttribute("LoggedIn") as LoggedIn?
         println("Session in filter " + session)
         if (li == null || li.getlogedin() == false) {
             println("Foward to login")
@@ -167,9 +158,7 @@ class ProtectPages : Filter {
     override fun init(filterConfig: FilterConfig?) {
         this.filterConfig = filterConfig
         if (filterConfig != null) {
-            if (debug) {
-                log("ProtectPages:Initializing filter")
-            }
+            log.debug("ProtectPages:Initializing filter")
         }
     }
 
@@ -218,13 +207,7 @@ class ProtectPages : Filter {
         }
     }
 
-    fun log(msg: String) {
-        filterConfig!!.servletContext.log(msg)
-    }
-
     companion object {
-
-        private val debug = true
 
         fun getStackTrace(t: Throwable): String? {
             var stackTrace: String? = null

@@ -57,9 +57,9 @@ class Image : HttpServlet() {
         }
 
         when (command) {
-            1 -> DisplayImage(Convertors.DISPLAY_PROCESSED, args[2], response)
+            1 -> DisplayImage(Convertors.DISPLAY.PROCESSED, args[2], response)
             2 -> DisplayImageList(args[2], request, response)
-            3 -> DisplayImage(Convertors.DISPLAY_THUMB, args[2], response)
+            3 -> DisplayImage(Convertors.DISPLAY.THUMB, args[2], response)
             else -> error("Bad Operator", response)
         }
     }
@@ -76,7 +76,7 @@ class Image : HttpServlet() {
     }
 
     @Throws(ServletException::class, IOException::class)
-    private fun DisplayImage(type: Int, Image: String, response: HttpServletResponse) {
+    private fun DisplayImage(type: Convertors.DISPLAY, Image: String, response: HttpServletResponse) {
         val tm = PicModel()
         tm.setCluster(cluster)
 

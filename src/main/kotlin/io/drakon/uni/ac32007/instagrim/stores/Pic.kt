@@ -21,7 +21,7 @@ class Pic {
         this.UUID = UUID
     }
 
-    val suuid: String
+    val SUUID: String
         get() = UUID!!.toString()
 
     fun setPic(bImage: ByteBuffer, length: Int, type: String) {
