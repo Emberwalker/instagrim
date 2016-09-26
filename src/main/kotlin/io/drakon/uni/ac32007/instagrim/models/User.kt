@@ -2,15 +2,10 @@ package io.drakon.uni.ac32007.instagrim.models
 
 import com.datastax.driver.core.BoundStatement
 import com.datastax.driver.core.Cluster
-import com.datastax.driver.core.PreparedStatement
-import com.datastax.driver.core.ResultSet
-import com.datastax.driver.core.Row
-import com.datastax.driver.core.Session
 import java.io.UnsupportedEncodingException
 import java.security.NoSuchAlgorithmException
 
 import io.drakon.uni.ac32007.instagrim.lib.AeSimpleSHA1
-
 
 class User {
     // FIXME: Make this non-nullable.

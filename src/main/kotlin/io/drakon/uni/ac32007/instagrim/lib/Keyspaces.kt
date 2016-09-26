@@ -1,7 +1,5 @@
 package io.drakon.uni.ac32007.instagrim.lib
 
-import java.util.ArrayList
-
 import com.datastax.driver.core.*
 
 object Keyspaces {
@@ -53,14 +51,14 @@ object Keyspaces {
                 val statement = session.prepare(createkeyspace)
                 val boundStatement = BoundStatement(
                         statement)
-                val rs = session.execute(boundStatement)
+                session.execute(boundStatement)
                 println("created instagrim ")
             } catch (et: Exception) {
                 println("Can't create instagrim " + et)
             }
 
             //now add some column families
-            println("" + CreatePicTable)
+            println(CreatePicTable)
 
             try {
                 val cqlQuery = SimpleStatement(CreatePicTable)
@@ -69,7 +67,7 @@ object Keyspaces {
                 println("Can't create tweet table " + et)
             }
 
-            println("" + Createuserpiclist)
+            println(Createuserpiclist)
 
             try {
                 val cqlQuery = SimpleStatement(Createuserpiclist)
@@ -78,7 +76,7 @@ object Keyspaces {
                 println("Can't create user pic list table " + et)
             }
 
-            println("" + CreateAddressType)
+            println(CreateAddressType)
             try {
                 val cqlQuery = SimpleStatement(CreateAddressType)
                 session.execute(cqlQuery)
@@ -86,7 +84,7 @@ object Keyspaces {
                 println("Can't create Address type " + et)
             }
 
-            println("" + CreateUserProfile)
+            println(CreateUserProfile)
             try {
                 val cqlQuery = SimpleStatement(CreateUserProfile)
                 session.execute(cqlQuery)

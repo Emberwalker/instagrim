@@ -1,17 +1,5 @@
 package io.drakon.uni.ac32007.instagrim.models
 
-/*
- * Expects a cassandra columnfamily defined as
- * use keyspace2;
- CREATE TABLE Tweets (
- user varchar,
- interaction_time timeuuid,
- tweet varchar,
- PRIMARY KEY (user,interaction_time)
- ) WITH CLUSTERING ORDER BY (interaction_time DESC);
- * To manually generate a UUID use:
- * http://www.famkruithof.net/uuid/uuidgen
- */
 import com.datastax.driver.core.BoundStatement
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.PreparedStatement
@@ -145,7 +133,6 @@ class PicModel {
         var type: String? = null
         var length = 0
         try {
-            val convertor = Convertors()
             var rs: ResultSet? = null
             var ps: PreparedStatement? = null
 

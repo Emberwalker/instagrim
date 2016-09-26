@@ -25,9 +25,6 @@ import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
 import io.drakon.uni.ac32007.instagrim.stores.Pic
 
-/**
- * Servlet implementation class Image
- */
 @WebServlet(urlPatterns = arrayOf("/Image", "/Image/*", "/Thumb/*", "/Images", "/Images/*"))
 @MultipartConfig
 class Image : HttpServlet() {

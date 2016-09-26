@@ -40,11 +40,11 @@ object CassandraHosts {
         return sHosts.toTypedArray()
     }
 
-    fun getCluster(): Cluster? {
+    fun getCluster(): Cluster {
         println("getCluster")
         _cluster = Cluster.builder().addContactPoint(Host).build()
         if (getHosts(_cluster) == null) {
-            return null
+            throw RuntimeException("getHosts failed for cluster")
         }
         Keyspaces.SetUpKeySpaces(_cluster)
 

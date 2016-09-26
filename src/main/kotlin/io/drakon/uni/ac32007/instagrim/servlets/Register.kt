@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse
 import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
 import io.drakon.uni.ac32007.instagrim.models.User
 
-
 @WebServlet(name = "Register", urlPatterns = arrayOf("/Register"))
 class Register : HttpServlet() {
 
@@ -21,7 +20,6 @@ class Register : HttpServlet() {
     override fun init(config: ServletConfig) {
         cluster = CassandraHosts.getCluster()
     }
-
 
     /**
      * Handles the HTTP `POST` method.
