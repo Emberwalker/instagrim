@@ -7,9 +7,6 @@ import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 object Convertors {
-    /*var DISPLAY_IMAGE = 0
-    var DISPLAY_THUMB = 1
-    var DISPLAY_PROCESSED = 2*/
 
     enum class DISPLAY(val id: Int) {
         IMAGE(0),
@@ -44,7 +41,6 @@ object Convertors {
         for (i in 7 downTo 0) { //fill from the right
             buffer[i] = (value and 0x00000000000000ff).toByte() //get the bottom byte
 
-            //System.out.print(""+Integer.toHexString((int)buffer[i])+",");
             value = value.ushr(8) //Shift the value right 8 bits
         }
         return buffer
@@ -55,7 +51,6 @@ object Convertors {
         var multiplier: Long = 1
         for (i in 7 downTo 0) { //get from the right
 
-            //System.out.println(Long.toHexString(multiplier)+"\t"+Integer.toHexString((int)buffer[i]));
             value += (buffer[i].toInt() and 0xff) * multiplier // add the value * the hex mulitplier
             multiplier = multiplier shl 8
         }
@@ -66,10 +61,8 @@ object Convertors {
         val byteArrayLength = buffer.size
         for (i in 0..byteArrayLength - 1) {
             val `val` = buffer[i].toInt()
-            // System.out.print(Integer.toHexString(val)+",");
         }
 
-        //System.out.println();
     }
 
     //From: http://www.captain.at/howto-java-convert-binary-data.php
@@ -126,7 +119,6 @@ object Convertors {
 
             args[argv] = st.nextToken()
             try {
-                //System.out.println("String was "+URLDecoder.decode(args[argv],"UTF-8"));
                 args[argv] = URLDecoder.decode(args[argv], "UTF-8")
 
             } catch (et: Exception) {
@@ -152,7 +144,6 @@ object Convertors {
 
             args[argv] = st.nextToken()
             try {
-                //System.out.println("String was "+URLDecoder.decode(args[argv],"UTF-8"));
                 args[argv] = URLDecoder.decode(args[argv], "UTF-8")
 
             } catch (et: Exception) {

@@ -6,20 +6,22 @@ import java.io.UnsupportedEncodingException
 import java.security.NoSuchAlgorithmException
 
 import io.drakon.uni.ac32007.instagrim.lib.AeSimpleSHA1
+import org.slf4j.LoggerFactory
 
 class User {
-    // FIXME: Make this non-nullable.
+
     lateinit internal var cluster: Cluster
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     fun RegisterUser(username: String, Password: String): Boolean {
         val EncodedPassword: String
         try {
             EncodedPassword = AeSimpleSHA1.SHA1(Password)
         } catch (et: UnsupportedEncodingException) {
-            println("Can't check your password")
+            log.warn("Can't check your password", et)
             return false
         } catch (et: NoSuchAlgorithmException) {
-            println("Can't check your password")
+            log.warn("Can't check your password", et)
             return false
         }
 
@@ -40,22 +42,21 @@ class User {
         try {
             EncodedPassword = AeSimpleSHA1.SHA1(Password)
         } catch (et: UnsupportedEncodingException) {
-            println("Can't check your password")
+            log.warn("Can't check your password", et)
             return false
         } catch (et: NoSuchAlgorithmException) {
-            println("Can't check your password")
+            log.warn("Can't check your password", et)
             return false
         }
 
         val session = cluster.connect("instagrim")
         val ps = session.prepare("select password from userprofiles where login =?")
         val boundStatement = BoundStatement(ps)
-        // TODO: Look at making this not-nullable or smart castable
         val rs = session.execute(// this is where the query is executed
                 boundStatement.bind(// here you are binding the 'boundStatement'
                         username))
-        if (rs!!.isExhausted) {
-            println("No Images returned")
+        if (rs.isExhausted) {
+            log.debug("No Images returned")
             return false
         } else {
             for (row in rs) {

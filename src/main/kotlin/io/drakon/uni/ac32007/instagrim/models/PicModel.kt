@@ -62,7 +62,7 @@ class PicModel {
             for (row in rs) {
                 val pic = Pic()
                 val UUID = row.getUUID("picid")
-                println("UUID" + UUID.toString())
+                log.debug("UUID" + UUID.toString())
                 pic.setUUID(UUID)
                 Pics.add(pic)
 

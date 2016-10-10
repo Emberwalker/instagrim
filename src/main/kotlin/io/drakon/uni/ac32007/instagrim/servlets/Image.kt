@@ -24,13 +24,15 @@ import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
 import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
 import io.drakon.uni.ac32007.instagrim.stores.Pic
+import org.slf4j.LoggerFactory
 
 @WebServlet(urlPatterns = arrayOf("/Image", "/Image/*", "/Thumb/*", "/Images", "/Images/*"))
 @MultipartConfig
 class Image : HttpServlet() {
+
     lateinit private var cluster: Cluster
     private val CommandsMap = HashMap<String,Int>()
-
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     init {
         // TODO Auto-generated constructor stub
@@ -102,7 +104,7 @@ class Image : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         for (part in request.parts) {
-            println("Part Name " + part.name)
+            log.debug("Part Name {}", part.name)
 
             val type = part.contentType
             val filename = part.submittedFileName
@@ -119,7 +121,7 @@ class Image : HttpServlet() {
             if (i > 0) {
                 val b = ByteArray(i + 1)
                 `is`.read(b)
-                println("Length : " + b.size)
+                log.debug("Length: {}", b.size)
                 val tm = PicModel()
                 tm.setCluster(cluster)
                 tm.insertPic(b, type, filename, username)

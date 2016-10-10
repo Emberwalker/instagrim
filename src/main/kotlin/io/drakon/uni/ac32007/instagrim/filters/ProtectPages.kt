@@ -96,9 +96,9 @@ class ProtectPages : Filter {
         val httpReq = request as HttpServletRequest
         val session = httpReq.getSession(false)
         val li = session.getAttribute("LoggedIn") as LoggedIn?
-        println("Session in filter " + session)
+        log.debug("Session in filter " + session)
         if (li == null || li.getlogedin() == false) {
-            println("Foward to login")
+            log.debug("Foward to login")
             val rd = request.getRequestDispatcher("/login.jsp")
             rd.forward(request, response)
 
@@ -112,7 +112,7 @@ class ProtectPages : Filter {
             // we still want to execute our after processing, and then
             // rethrow the problem after that.
             problem = t
-            t.printStackTrace()
+            log.error("Caught throwable from filter chain", t)
         }
 
         doAfterProcessing(request, response)

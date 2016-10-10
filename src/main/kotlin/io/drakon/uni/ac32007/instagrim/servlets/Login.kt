@@ -13,11 +13,13 @@ import javax.servlet.http.HttpSession
 import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
 import io.drakon.uni.ac32007.instagrim.models.User
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
+import org.slf4j.LoggerFactory
 
 @WebServlet(name = "Login", urlPatterns = arrayOf("/Login", "/Login/*"))
 class Login : HttpServlet() {
 
     lateinit internal var cluster: Cluster
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Throws(ServletException::class)
     override fun init(config: ServletConfig) {
@@ -41,7 +43,7 @@ class Login : HttpServlet() {
         us.setCluster(cluster)
         val isValid = us.IsValidUser(username, password)
         val session = request.session
-        println("Session in servlet " + session)
+        log.info("Session in servlet: {}", session)
         if (isValid) {
             val lg = LoggedIn()
             lg.setLogedin()
@@ -49,7 +51,7 @@ class Login : HttpServlet() {
             //request.setAttribute("LoggedIn", lg);
 
             session.setAttribute("LoggedIn", lg)
-            println("Session in servlet " + session)
+            log.info("Session in servlet: {}", session)
             val rd = request.getRequestDispatcher("index.jsp")
             rd.forward(request, response)
 
