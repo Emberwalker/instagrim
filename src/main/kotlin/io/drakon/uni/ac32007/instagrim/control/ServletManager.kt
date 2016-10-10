@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebListener
  */
 @WebListener
 class ServletManager: ServletContextListener {
+
     /**
      * Receives notification that the web application initialization
      * process is starting.
@@ -21,7 +22,7 @@ class ServletManager: ServletContextListener {
 
      * @param sce the ServletContextEvent containing the ServletContext that is being initialized
      */
-    override fun contextInitialized(sce: ServletContextEvent?) {
+    override fun contextInitialized(sce: ServletContextEvent) {
         // Not needed.
     }
 
@@ -36,8 +37,9 @@ class ServletManager: ServletContextListener {
 
      * @param sce the ServletContextEvent containing the ServletContext that is being destroyed
      */
-    override fun contextDestroyed(sce: ServletContextEvent?) {
+    override fun contextDestroyed(sce: ServletContextEvent) {
         CassandraHosts.close()
         // TODO: Work out if we can kill off Netty's excess threads before exit to stop Tomcat whining.
     }
+
 }
