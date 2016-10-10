@@ -9,7 +9,7 @@ import javax.servlet.annotation.WebListener
  * Implementation of ServletContextListener for cleaning up on servlet destroy.
  */
 @WebListener
-class ServletManager: ServletContextListener {
+class ServletManager : ServletContextListener {
 
     /**
      * Receives notification that the web application initialization

@@ -1,19 +1,17 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
+import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.models.User
+import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
+import org.slf4j.LoggerFactory
 import java.io.IOException
-import javax.servlet.RequestDispatcher
 import javax.servlet.ServletConfig
 import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpSession
-import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
-import io.drakon.uni.ac32007.instagrim.models.User
-import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
-import org.slf4j.LoggerFactory
 
 @WebServlet(name = "Login", urlPatterns = arrayOf("/Login", "/Login/*"))
 class Login : HttpServlet() {

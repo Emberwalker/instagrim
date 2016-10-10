@@ -1,23 +1,14 @@
 package io.drakon.uni.ac32007.instagrim.filters
 
+import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.io.PrintStream
 import java.io.PrintWriter
 import java.io.StringWriter
-import javax.servlet.DispatcherType
-import javax.servlet.Filter
-import javax.servlet.FilterChain
-import javax.servlet.FilterConfig
-import javax.servlet.RequestDispatcher
-import javax.servlet.ServletException
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
+import javax.servlet.*
 import javax.servlet.annotation.WebFilter
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
-
-import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
-import org.slf4j.LoggerFactory
 
 @WebFilter(filterName = "ProtectPages", urlPatterns = arrayOf("/upload.jsp"), dispatcherTypes = arrayOf(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE))
 class ProtectPages : Filter {

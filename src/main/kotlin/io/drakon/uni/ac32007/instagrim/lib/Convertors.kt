@@ -90,7 +90,7 @@ object Convertors {
 
     fun SplitTags(Tags: String): Array<String> {
         val st = Convertors.SplitTagString(Tags)
-        val args = Array<String>(st.countTokens() + 1, init = {""})  //+1 for _No_Tag_
+        val args = Array<String>(st.countTokens() + 1, init = { "" })  //+1 for _No_Tag_
         //Lets assume the number is the last argument
 
         var argv = 0
@@ -110,7 +110,7 @@ object Convertors {
 
     fun SplitFiletype(type: String): Array<String> {
         val st = SplitString(type)
-        val args = Array<String>(st.countTokens(), init = {""})
+        val args = Array<String>(st.countTokens(), init = { "" })
         //Lets assume the number is the last argument
 
         var argv = 0
@@ -135,7 +135,7 @@ object Convertors {
 
     fun SplitRequestPath(request: HttpServletRequest): Array<String> {
         val st = SplitString(request.requestURI)
-        val args = Array<String>(st.countTokens(), init = {""})
+        val args = Array<String>(st.countTokens(), init = { "" })
         //Lets assume the number is the last argument
 
         var argv = 0

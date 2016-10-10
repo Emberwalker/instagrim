@@ -1,6 +1,7 @@
 package io.drakon.uni.ac32007.instagrim.lib
 
-import com.datastax.driver.core.*
+import com.datastax.driver.core.Cluster
+import com.datastax.driver.core.Metadata
 import org.slf4j.LoggerFactory
 import java.util.*
 

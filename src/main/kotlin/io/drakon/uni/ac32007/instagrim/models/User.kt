@@ -74,5 +74,4 @@ class User {
         this.cluster = cluster
     }
 
-
 }

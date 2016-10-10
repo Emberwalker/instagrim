@@ -8,7 +8,7 @@ import javax.imageio.ImageIO
 /**
  * The classic Instagrim filter - decolour. Ported from the original code in Instagrim (loosely).
  */
-object DecolourImg: ImgFilter {
+object DecolourImg : ImgFilter {
 
     override fun process(imgBytes: ByteArray, type: String): ByteArray {
         val image = ImageIO.read(ByteArrayInputStream(imgBytes))

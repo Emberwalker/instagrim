@@ -1,14 +1,16 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
+import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.Convertors
+import io.drakon.uni.ac32007.instagrim.models.PicModel
+import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
+import org.slf4j.LoggerFactory
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.io.PrintWriter
-import java.util.HashMap
-import javax.servlet.RequestDispatcher
+import java.util.*
 import javax.servlet.ServletConfig
 import javax.servlet.ServletException
 import javax.servlet.annotation.MultipartConfig
@@ -16,22 +18,13 @@ import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpSession
-import javax.servlet.http.Part
-
-import io.drakon.uni.ac32007.instagrim.models.PicModel
-import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
-import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
-import io.drakon.uni.ac32007.instagrim.lib.Convertors
-import io.drakon.uni.ac32007.instagrim.stores.Pic
-import org.slf4j.LoggerFactory
 
 @WebServlet(urlPatterns = arrayOf("/Image", "/Image/*", "/Thumb/*", "/Images", "/Images/*"))
 @MultipartConfig
 class Image : HttpServlet() {
 
     lateinit private var cluster: Cluster
-    private val CommandsMap = HashMap<String,Int>()
+    private val CommandsMap = HashMap<String, Int>()
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     init {

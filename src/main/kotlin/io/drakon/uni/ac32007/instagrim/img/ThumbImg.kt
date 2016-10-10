@@ -8,7 +8,7 @@ import javax.imageio.ImageIO
 /**
  * Filter to produce thumbnails.
  */
-object ThumbImg: ImgFilter {
+object ThumbImg : ImgFilter {
 
     override fun process(imgBytes: ByteArray, type: String): ByteArray {
         val image = ImageIO.read(ByteArrayInputStream(imgBytes))
