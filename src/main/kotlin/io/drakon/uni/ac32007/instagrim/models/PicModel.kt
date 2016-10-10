@@ -4,12 +4,13 @@ import com.datastax.driver.core.BoundStatement
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.PreparedStatement
 import com.datastax.driver.core.ResultSet
+import io.drakon.uni.ac32007.instagrim.img.DecolourImg
+import io.drakon.uni.ac32007.instagrim.img.ThumbImg
 
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.Date
@@ -37,20 +38,12 @@ class PicModel {
             val length = b.size
             val picid = Convertors.timeUUID
 
-            //The following is a quick and dirty way of doing this, will fill the disk quickly !
-            // TODO: UNIX only, make work elsewhere
-            val success = File("/var/tmp/instagrim/").mkdirs()
-            val output = FileOutputStream(File("/var/tmp/instagrim/" + picid))
+            val thumbbuf = ThumbImg.process(b, types[1])
+            val thumblength = thumbbuf.size
+            val processedbuf = DecolourImg.process(b, types[1])
+            val processedlength = processedbuf.size
 
-            output.write(b)
-            val thumbb = picresize(picid.toString(), types[1])
-            val thumblength = thumbb!!.size
-            val thumbbuf = ByteBuffer.wrap(thumbb)
-            val processedb = picdecolour(picid.toString(), types[1])
-            val processedbuf = ByteBuffer.wrap(processedb!!)
-            val processedlength = processedb.size
             val session = cluster.connect("instagrim")
-
             val psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)")
             val psInsertPicToUser = session.prepare("insert into userpiclist ( picid, user, pic_added) values(?,?,?)")
             val bsInsertPic = BoundStatement(psInsertPic)
@@ -65,41 +58,6 @@ class PicModel {
             log.error("I/O Error during insertPic", ex)
         }
 
-    }
-
-    fun picresize(picid: String, type: String): ByteArray? {
-        try {
-            val BI = ImageIO.read(File("/var/tmp/instagrim/" + picid))
-            val thumbnail = createThumbnail(BI)
-            val baos = ByteArrayOutputStream()
-            ImageIO.write(thumbnail, type, baos)
-            baos.flush()
-
-            val imageInByte = baos.toByteArray()
-            baos.close()
-            return imageInByte
-        } catch (ex: IOException) {
-            log.error("I/O Error during picresize", ex)
-        }
-
-        return null
-    }
-
-    fun picdecolour(picid: String, type: String): ByteArray? {
-        try {
-            val BI = ImageIO.read(File("/var/tmp/instagrim/" + picid))
-            val processed = createProcessed(BI)
-            val baos = ByteArrayOutputStream()
-            ImageIO.write(processed, type, baos)
-            baos.flush()
-            val imageInByte = baos.toByteArray()
-            baos.close()
-            return imageInByte
-        } catch (ex: IOException) {
-            log.error("I/O Error during pixdecolour", ex)
-        }
-
-        return null
     }
 
     fun getPicsForUser(User: String): java.util.LinkedList<Pic>? {
@@ -177,23 +135,6 @@ class PicModel {
 
         return p
 
-    }
-
-    companion object {
-
-        fun createThumbnail(img: BufferedImage): BufferedImage {
-            var img = img
-            img = resize(img, Method.SPEED, 250, OP_ANTIALIAS, OP_GRAYSCALE)
-            // Let's add a little border before we return result.
-            return pad(img, 2)
-        }
-
-        fun createProcessed(img: BufferedImage): BufferedImage {
-            var img = img
-            val Width = img.width - 1
-            img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE)
-            return pad(img, 4)
-        }
     }
 
 }
