@@ -15,6 +15,7 @@ object SimpleSHA1 {
         md.update(text.toByteArray(charset("iso-8859-1")), 0, text.length)
         val sha1hash = md.digest()
         // Must lower-case to maintain compatibility with original implementation
+        // Found via comment on http://stackoverflow.com/a/12514398
         return DatatypeConverter.printHexBinary(sha1hash).toLowerCase(locale = Locale("iso-8859-1"))
     }
 
