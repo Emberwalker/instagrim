@@ -5,7 +5,7 @@ import com.datastax.driver.core.Cluster
 import java.io.UnsupportedEncodingException
 import java.security.NoSuchAlgorithmException
 
-import io.drakon.uni.ac32007.instagrim.lib.AeSimpleSHA1
+import io.drakon.uni.ac32007.instagrim.lib.SimpleSHA1
 import org.slf4j.LoggerFactory
 
 class User {
@@ -16,7 +16,7 @@ class User {
     fun RegisterUser(username: String, Password: String): Boolean {
         val EncodedPassword: String
         try {
-            EncodedPassword = AeSimpleSHA1.SHA1(Password)
+            EncodedPassword = SimpleSHA1.SHA1(Password)
         } catch (et: UnsupportedEncodingException) {
             log.warn("Can't check your password", et)
             return false
@@ -40,7 +40,7 @@ class User {
     fun IsValidUser(username: String, Password: String): Boolean {
         val EncodedPassword: String
         try {
-            EncodedPassword = AeSimpleSHA1.SHA1(Password)
+            EncodedPassword = SimpleSHA1.SHA1(Password)
         } catch (et: UnsupportedEncodingException) {
             log.warn("Can't check your password", et)
             return false
