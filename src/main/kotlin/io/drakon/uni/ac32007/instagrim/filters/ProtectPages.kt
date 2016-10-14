@@ -19,16 +19,6 @@ class ProtectPages : Filter {
     private var filterConfig: FilterConfig? = null
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Throws(IOException::class, ServletException::class)
-    private fun doBeforeProcessing(request: ServletRequest, response: ServletResponse) {
-        log.debug("DoBeforeProcessing")
-    }
-
-    @Throws(IOException::class, ServletException::class)
-    private fun doAfterProcessing(request: ServletRequest, response: ServletResponse) {
-        log.debug("DoAfterProcessing")
-    }
-
     /**
      * @param request The servlet request we are processing
      * @param response The servlet response we are creating
@@ -42,7 +32,6 @@ class ProtectPages : Filter {
 
         log.debug("doFilter")
 
-        doBeforeProcessing(request, response)
         log.debug("Doing filter")
         val httpReq = request as HttpServletRequest
         val session = httpReq.getSession(false)
@@ -64,8 +53,6 @@ class ProtectPages : Filter {
             log.error("Caught throwable from filter chain", t)
         }
 
-        doAfterProcessing(request, response)
-
         // If there was a problem, we want to rethrow it if it is
         // a known type, otherwise log it.
         if (problem != null) {
@@ -82,8 +69,7 @@ class ProtectPages : Filter {
     /**
      * Destroy method for this filter
      */
-    override fun destroy() {
-    }
+    override fun destroy() {}
 
     /**
      * Init method for this filter
@@ -152,6 +138,7 @@ class ProtectPages : Filter {
                 return null
             }
         }
+
     }
 
 }
