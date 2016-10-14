@@ -2,10 +2,10 @@ package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
 import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.ext.redirectInContext
 import io.drakon.uni.ac32007.instagrim.models.User
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
 import org.slf4j.LoggerFactory
-import java.io.IOException
 import javax.servlet.ServletConfig
 import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
@@ -24,14 +24,6 @@ class Login : HttpServlet() {
         cluster = CassandraHosts.getCluster()
     }
 
-    /**
-     * Handles the HTTP `POST` method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Throws(ServletException::class, IOException::class)
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
 
         val username = request.getParameter("username")
@@ -43,29 +35,23 @@ class Login : HttpServlet() {
         val session = request.session
         log.info("Session in servlet: {}", session)
         if (isValid) {
-            val lg = LoggedIn()
-            lg.setLogedin()
-            lg.username = username
-            //request.setAttribute("LoggedIn", lg);
-
+            val lg = LoggedIn(true, username)
             session.setAttribute("LoggedIn", lg)
             log.info("Session in servlet: {}", session)
-            val rd = request.getRequestDispatcher("index.jsp")
-            rd.forward(request, response)
-
+            response.redirectInContext(request, "/")
         } else {
-            response.sendRedirect("/Instagrim/login.jsp") // FIXME: Make relative to container
+            response.redirectInContext(request, "/Login")
         }
 
     }
 
-    /**
-     * Returns a short description of the servlet.
+    override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
+        val rd = req.getRequestDispatcher("/WEB-INF/login.jsp")
+        rd.forward(req, resp)
+    }
 
-     * @return a String containing servlet description
-     */
     override fun getServletInfo(): String {
-        return "Short description" // FIXME: Change this.
+        return "Login Controller"
     }
 
 }

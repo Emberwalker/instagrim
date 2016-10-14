@@ -108,7 +108,7 @@ class Image : HttpServlet() {
             val session = request.session
             val lg = session.getAttribute("LoggedIn") as LoggedIn
             var username = "majed"
-            if (lg.getlogedin()) {
+            if (lg.loggedIn) {
                 username = lg.username!! // FIXME: Nullable?
             }
             if (i > 0) {

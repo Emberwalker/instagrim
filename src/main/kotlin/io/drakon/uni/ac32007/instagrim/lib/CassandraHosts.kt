@@ -11,8 +11,8 @@ object CassandraHosts {
     internal var Host = "127.0.0.1"  //at least one starting point to talk to
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    fun getHosts(cluster: Cluster?): Array<String>? {
-        var cluster = cluster
+    fun getHosts(cl: Cluster?): Array<String>? {
+        var cluster = cl
         if (cluster == null) {
             log.info("Creating cluster connection")
             cluster = Cluster.builder().addContactPoint(Host).build()
@@ -49,7 +49,7 @@ object CassandraHosts {
             // TODO: Deal with missing server gracefully
             throw RuntimeException("getHosts failed for cluster")
         }
-        Keyspaces.SetUpKeySpaces(_cluster)
+        Keyspaces.setUpKeySpaces(_cluster)
 
         return _cluster
     }

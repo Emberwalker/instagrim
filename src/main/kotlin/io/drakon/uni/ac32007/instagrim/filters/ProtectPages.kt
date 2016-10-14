@@ -88,12 +88,10 @@ class ProtectPages : Filter {
         val session = httpReq.getSession(false)
         val li = session.getAttribute("LoggedIn") as LoggedIn?
         log.debug("Session in filter " + session)
-        if (li == null || li.getlogedin() == false) {
+        if (li == null || li.loggedIn == false) {
             log.debug("Foward to login")
             val rd = request.getRequestDispatcher("/login.jsp")
             rd.forward(request, response)
-
-
         }
         var problem: Throwable? = null
         try {

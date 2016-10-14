@@ -2,11 +2,10 @@ package io.drakon.uni.ac32007.instagrim.models
 
 import com.datastax.driver.core.BoundStatement
 import com.datastax.driver.core.Cluster
-import java.io.UnsupportedEncodingException
-import java.security.NoSuchAlgorithmException
-
 import io.drakon.uni.ac32007.instagrim.lib.SimpleSHA1
 import org.slf4j.LoggerFactory
+import java.io.UnsupportedEncodingException
+import java.security.NoSuchAlgorithmException
 
 class User {
 
