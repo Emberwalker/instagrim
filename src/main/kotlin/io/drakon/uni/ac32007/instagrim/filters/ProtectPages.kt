@@ -10,63 +10,23 @@ import javax.servlet.*
 import javax.servlet.annotation.WebFilter
 import javax.servlet.http.HttpServletRequest
 
-@WebFilter(filterName = "ProtectPages", urlPatterns = arrayOf("/upload.jsp"), dispatcherTypes = arrayOf(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE))
+@WebFilter(filterName = "ProtectPages", urlPatterns = arrayOf("/upload.jsp", "/Upload"), dispatcherTypes = arrayOf(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE))
 class ProtectPages : Filter {
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured.
     private var filterConfig: FilterConfig? = null
-
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Throws(IOException::class, ServletException::class)
     private fun doBeforeProcessing(request: ServletRequest, response: ServletResponse) {
         log.debug("DoBeforeProcessing")
-
-        // Write code here to process the request and/or response before
-        // the rest of the filter chain is invoked.
-        // For example, a logging filter might log items on the request object,
-        // such as the parameters.
-        /*
-         for (Enumeration en = request.getParameterNames(); en.hasMoreElements(); ) {
-         String name = (String)en.nextElement();
-         String values[] = request.getParameterValues(name);
-         int n = values.length;
-         StringBuffer buf = new StringBuffer();
-         buf.append(name);
-         buf.append("=");
-         for(int i=0; i < n; i++) {
-         buf.append(values[i]);
-         if (i < n-1)
-         buf.append(",");
-         }
-         log(buf.toString());
-         }
-         */
     }
 
     @Throws(IOException::class, ServletException::class)
     private fun doAfterProcessing(request: ServletRequest, response: ServletResponse) {
         log.debug("DoAfterProcessing")
-
-        // Write code here to process the request and/or response after
-        // the rest of the filter chain is invoked.
-        // For example, a logging filter might log the attributes on the
-        // request object after the request has been processed.
-        /*
-         for (Enumeration en = request.getAttributeNames(); en.hasMoreElements(); ) {
-         String name = (String)en.nextElement();
-         Object value = request.getAttribute(name);
-         log("attribute: " + name + "=" + value.toString());
-
-         }
-         */
-        // For example, a filter might append something to the response.
-        /*
-         PrintWriter respOut = new PrintWriter(response.getWriter());
-         respOut.println("<P><B>This has been appended by an intrusive filter.</B>");
-         */
     }
 
     /**
@@ -120,22 +80,6 @@ class ProtectPages : Filter {
     }
 
     /**
-     * Return the filter configuration object for this filter.
-     */
-    fun getFilterConfig(): FilterConfig? {
-        return this.filterConfig
-    }
-
-    /**
-     * Set the filter configuration object for this filter.
-
-     * @param filterConfig The filter configuration object
-     */
-    fun setFilterConfig(filterConfig: FilterConfig) {
-        this.filterConfig = filterConfig
-    }
-
-    /**
      * Destroy method for this filter
      */
     override fun destroy() {
@@ -172,12 +116,10 @@ class ProtectPages : Filter {
                 response.contentType = "text/html"
                 val ps = PrintStream(response.outputStream)
                 val pw = PrintWriter(ps)
-                pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n") //NOI18N
-
-                // PENDING! Localize this for next official release
+                pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n")
                 pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n")
                 pw.print(stackTrace)
-                pw.print("</pre></body>\n</html>") //NOI18N
+                pw.print("</pre></body>\n</html>")
                 pw.close()
                 ps.close()
                 response.outputStream.close()
@@ -199,18 +141,16 @@ class ProtectPages : Filter {
     companion object {
 
         fun getStackTrace(t: Throwable): String? {
-            var stackTrace: String? = null
             try {
-                val sw = StringWriter()
-                val pw = PrintWriter(sw)
-                t.printStackTrace(pw)
-                pw.close()
-                sw.close()
-                stackTrace = sw.buffer.toString()
+                return StringWriter().use {
+                    PrintWriter(it).use {
+                        t.printStackTrace(it)
+                    }
+                    it.buffer.toString()
+                }
             } catch (ex: Exception) {
+                return null
             }
-
-            return stackTrace
         }
     }
 
