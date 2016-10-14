@@ -90,7 +90,7 @@ class ProtectPages : Filter {
         log.debug("Session in filter " + session)
         if (li == null || li.loggedIn == false) {
             log.debug("Foward to login")
-            val rd = request.getRequestDispatcher("/login.jsp")
+            val rd = request.getRequestDispatcher("/Login")
             rd.forward(request, response)
         }
         var problem: Throwable? = null

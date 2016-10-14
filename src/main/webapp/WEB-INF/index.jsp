@@ -13,12 +13,12 @@
         </header>
         <nav>
             <ul>
-                <li><a href="../upload.jsp">Upload</a></li>
+                <li><a href="./upload.jsp">Upload</a></li>
                     <%  if ((boolean)request.getAttribute("loggedIn")) {  %>
-                <li><a href="/Instagrim/Images/<%=(String)request.getAttribute("username")%>">Your Images</a></li>
+                <li><a href="./Images/<%=(String)request.getAttribute("username")%>">Your Images</a></li>
                     <%  } else {  %>
-                <li><a href="../register.jsp">Register</a></li>
-                <li><a href="Login">Login</a></li>
+                <li><a href="./register.jsp">Register</a></li>
+                <li><a href="./Login">Login</a></li>
                     <%  }  %>
             </ul>
         </nav>
