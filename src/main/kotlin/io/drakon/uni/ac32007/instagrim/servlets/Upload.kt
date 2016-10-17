@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse
  * Facade around upload.jsp to make uniform URLs.
  */
 @WebServlet(name = "Upload", urlPatterns = arrayOf("/Upload"))
-class Upload: HttpServlet() {
+class Upload : HttpServlet() {
 
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
         val rd = req.getRequestDispatcher("/WEB-INF/upload.jsp")

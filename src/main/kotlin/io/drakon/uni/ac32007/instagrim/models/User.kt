@@ -1,7 +1,6 @@
 package io.drakon.uni.ac32007.instagrim.models
 
 import com.datastax.driver.core.BoundStatement
-import com.datastax.driver.core.Cluster
 import io.drakon.uni.ac32007.instagrim.lib.SimpleSHA1
 import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import org.slf4j.LoggerFactory

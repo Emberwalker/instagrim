@@ -1,11 +1,8 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
-import com.datastax.driver.core.Cluster
-import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.lib.ext.redirectInContext
 import io.drakon.uni.ac32007.instagrim.models.User
 import java.io.IOException
-import javax.servlet.ServletConfig
 import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet

@@ -1,6 +1,5 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
-import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet

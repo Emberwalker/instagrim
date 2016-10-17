@@ -1,7 +1,5 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
-import com.datastax.driver.core.Cluster
-import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
 import io.drakon.uni.ac32007.instagrim.models.PicModel
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
@@ -11,7 +9,6 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.PrintWriter
 import java.util.*
-import javax.servlet.ServletConfig
 import javax.servlet.ServletException
 import javax.servlet.annotation.MultipartConfig
 import javax.servlet.annotation.WebServlet

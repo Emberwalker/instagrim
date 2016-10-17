@@ -69,7 +69,8 @@ class ProtectPages : Filter {
     /**
      * Destroy method for this filter
      */
-    override fun destroy() {}
+    override fun destroy() {
+    }
 
     /**
      * Init method for this filter
