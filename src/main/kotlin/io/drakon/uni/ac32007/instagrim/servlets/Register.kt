@@ -1,7 +1,7 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
-import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.lib.ext.redirectInContext
 import io.drakon.uni.ac32007.instagrim.models.User
 import java.io.IOException
@@ -14,13 +14,6 @@ import javax.servlet.http.HttpServletResponse
 
 @WebServlet(name = "Register", urlPatterns = arrayOf("/Register"))
 class Register : HttpServlet() {
-
-    lateinit internal var cluster: Cluster
-
-    @Throws(ServletException::class)
-    override fun init(config: ServletConfig) {
-        cluster = CassandraHosts.getCluster()
-    }
 
     /**
      * Handles the HTTP `POST` method.
@@ -35,7 +28,6 @@ class Register : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster)
         us.RegisterUser(username, password)
 
         response.redirectInContext(request, "/")

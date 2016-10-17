@@ -1,12 +1,12 @@
 package io.drakon.uni.ac32007.instagrim.models
 
 import com.datastax.driver.core.BoundStatement
-import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.PreparedStatement
-import com.datastax.driver.core.ResultSet
 import io.drakon.uni.ac32007.instagrim.img.DecolourImg
 import io.drakon.uni.ac32007.instagrim.img.ThumbImg
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
+import io.drakon.uni.ac32007.instagrim.lib.db.CachedStatement
+import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.stores.Pic
 import org.slf4j.LoggerFactory
 import java.nio.ByteBuffer
@@ -14,11 +14,21 @@ import java.util.*
 
 class PicModel {
 
-    lateinit internal var cluster: Cluster
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    fun setCluster(cluster: Cluster) {
-        this.cluster = cluster
+    companion object {
+        // CQL statements must be in the companion, to avoid being recomputed by each thread in the app server.
+        // INSERT
+        private val cqlInsertPic = CachedStatement("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)")
+        private val cqlInsertPicToUser = CachedStatement("insert into userpiclist ( picid, user, pic_added) values(?,?,?)")
+
+        // SELECT
+        private val cqlUserPicListByUser = CachedStatement("select picid from userpiclist where user =?")
+        private val cqlDisplay = mapOf(
+                Convertors.DISPLAY.IMAGE to CachedStatement("select image,imagelength,type from pics where picid =?"),
+                Convertors.DISPLAY.THUMB to CachedStatement("select thumb,imagelength,thumblength,type from pics where picid =?"),
+                Convertors.DISPLAY.PROCESSED to CachedStatement("select processed,processedlength,type from pics where picid =?")
+        )
     }
 
     fun insertPic(b: ByteArray, type: String, name: String, user: String) {
@@ -32,35 +42,29 @@ class PicModel {
         val processedbuf = ByteBuffer.wrap(DecolourImg.process(b, types[1]))
         val processedlength = processedbuf.array().size
 
-        val session = cluster.connect("instagrim")
-        val psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)")
-        val psInsertPicToUser = session.prepare("insert into userpiclist ( picid, user, pic_added) values(?,?,?)")
-        val bsInsertPic = BoundStatement(psInsertPic)
-        val bsInsertPicToUser = BoundStatement(psInsertPicToUser)
+        val session = Cassandra.getSession()
+        val bsInsertPic = BoundStatement(cqlInsertPic.get(session))
+        val bsInsertPicToUser = BoundStatement(cqlInsertPicToUser.get(session))
 
         val DateAdded = Date()
         session.execute(bsInsertPic.bind(picid, buffer, thumbbuf, processedbuf, user, DateAdded, length, thumblength, processedlength, type, name))
         session.execute(bsInsertPicToUser.bind(picid, user, DateAdded))
-        session.close()
     }
 
     fun getPicsForUser(User: String): java.util.LinkedList<Pic>? {
         val Pics = java.util.LinkedList<Pic>()
-        val session = cluster.connect("instagrim")
-        val ps = session.prepare("select picid from userpiclist where user =?")
-        var rs: ResultSet? = null
-        val boundStatement = BoundStatement(ps)
-        rs = session.execute(// this is where the query is executed
+        val session = Cassandra.getSession()
+        val boundStatement = BoundStatement(cqlUserPicListByUser.get(session))
+        val rs = session.execute(// this is where the query is executed
                 boundStatement.bind(// here you are binding the 'boundStatement'
                         User))
-        if (rs!!.isExhausted) {
+        if (rs.isExhausted) {
             log.warn("No Images returned")
             return null
         } else {
             for (row in rs) {
                 val pic = Pic()
                 val UUID = row.getUUID("picid")
-                log.debug("UUID" + UUID.toString())
                 pic.setUUID(UUID)
                 Pics.add(pic)
 
@@ -70,16 +74,12 @@ class PicModel {
     }
 
     fun getPic(image_type: Convertors.DISPLAY, picid: java.util.UUID): Pic? {
-        val session = cluster.connect("instagrim")
+        val session = Cassandra.getSession()
         var bImage: ByteBuffer? = null
         var type: String? = null
         var length = 0
         try {
-            val ps: PreparedStatement = session.prepare(when (image_type) {
-                Convertors.DISPLAY.IMAGE -> "select image,imagelength,type from pics where picid =?"
-                Convertors.DISPLAY.THUMB -> "select thumb,imagelength,thumblength,type from pics where picid =?"
-                Convertors.DISPLAY.PROCESSED -> "select processed,processedlength,type from pics where picid =?"
-            })
+            val ps: PreparedStatement = cqlDisplay[image_type]!!.get(session)
             val boundStatement = BoundStatement(ps)
             val rs = session.execute(// this is where the query is executed
                     boundStatement.bind(// here you are binding the 'boundStatement'
@@ -113,7 +113,6 @@ class PicModel {
             return null
         }
 
-        session.close()
         val p = Pic()
         p.setPic(bImage!!, length, type!!)
 

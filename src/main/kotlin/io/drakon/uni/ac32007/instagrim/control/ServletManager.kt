@@ -1,6 +1,6 @@
 package io.drakon.uni.ac32007.instagrim.control
 
-import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
 import javax.servlet.annotation.WebListener
@@ -38,7 +38,7 @@ class ServletManager : ServletContextListener {
      * @param sce the ServletContextEvent containing the ServletContext that is being destroyed
      */
     override fun contextDestroyed(sce: ServletContextEvent) {
-        CassandraHosts.close()
+        Cassandra.close()
         // TODO: Work out if we can kill off Netty's excess threads before exit to stop Tomcat whining.
     }
 

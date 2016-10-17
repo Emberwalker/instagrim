@@ -3,13 +3,13 @@ package io.drakon.uni.ac32007.instagrim.models
 import com.datastax.driver.core.BoundStatement
 import com.datastax.driver.core.Cluster
 import io.drakon.uni.ac32007.instagrim.lib.SimpleSHA1
+import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import org.slf4j.LoggerFactory
 import java.io.UnsupportedEncodingException
 import java.security.NoSuchAlgorithmException
 
 class User {
 
-    lateinit internal var cluster: Cluster
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     fun RegisterUser(username: String, Password: String): Boolean {
@@ -24,7 +24,7 @@ class User {
             return false
         }
 
-        val session = cluster.connect("instagrim")
+        val session = Cassandra.getSession()
         val ps = session.prepare("insert into userprofiles (login,password) Values(?,?)")
 
         val boundStatement = BoundStatement(ps)
@@ -48,7 +48,7 @@ class User {
             return false
         }
 
-        val session = cluster.connect("instagrim")
+        val session = Cassandra.getSession()
         val ps = session.prepare("select password from userprofiles where login =?")
         val boundStatement = BoundStatement(ps)
         val rs = session.execute(// this is where the query is executed
@@ -67,10 +67,6 @@ class User {
 
 
         return false
-    }
-
-    fun setCluster(cluster: Cluster) {
-        this.cluster = cluster
     }
 
 }

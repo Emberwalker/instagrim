@@ -1,7 +1,7 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
-import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
 import io.drakon.uni.ac32007.instagrim.models.PicModel
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse
 @MultipartConfig
 class Image : HttpServlet() {
 
-    lateinit private var cluster: Cluster
     private val CommandsMap = HashMap<String, Int>()
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -33,11 +32,6 @@ class Image : HttpServlet() {
         CommandsMap.put("Images", 2)
         CommandsMap.put("Thumb", 3)
 
-    }
-
-    @Throws(ServletException::class)
-    override fun init(config: ServletConfig) {
-        cluster = CassandraHosts.getCluster()
     }
 
     @Throws(ServletException::class, IOException::class)
@@ -62,7 +56,6 @@ class Image : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     private fun DisplayImageList(User: String, request: HttpServletRequest, response: HttpServletResponse) {
         val tm = PicModel()
-        tm.setCluster(cluster)
         val lsPics = tm.getPicsForUser(User)
         val rd = request.getRequestDispatcher("/WEB-INF/UsersPics.jsp")
         request.setAttribute("Pics", lsPics)
@@ -73,7 +66,6 @@ class Image : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     private fun DisplayImage(type: Convertors.DISPLAY, Image: String, response: HttpServletResponse) {
         val tm = PicModel()
-        tm.setCluster(cluster)
 
 
         val p = tm.getPic(type, java.util.UUID.fromString(Image))
@@ -86,7 +78,6 @@ class Image : HttpServlet() {
         val `is` = ByteArrayInputStream(p.bytes)
         val input = BufferedInputStream(`is`)
         val buffer = ByteArray(8192)
-        // TODO: Test me (failed autoconversion)
         while (input.available() > 0) {
             val length = input.read(buffer)
             out.write(buffer, 0, length)
@@ -116,7 +107,6 @@ class Image : HttpServlet() {
                 `is`.read(b)
                 log.debug("Length: {}", b.size)
                 val tm = PicModel()
-                tm.setCluster(cluster)
                 tm.insertPic(b, type, filename, username)
 
                 `is`.close()

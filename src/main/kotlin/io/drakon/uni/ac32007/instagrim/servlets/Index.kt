@@ -1,6 +1,6 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
-import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse
  */
 @WebServlet(urlPatterns = arrayOf("/index", "/"))
 class Index : HttpServlet() {
-
-    private val cluster = CassandraHosts.getCluster()
 
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
         val lg = req.session.getAttribute("LoggedIn") as LoggedIn?

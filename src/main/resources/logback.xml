@@ -2,11 +2,15 @@
     <contextName>Instagrim</contextName>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[%d{HH:mm:ss}][%thread][%logger{36}][%method:%line][%-5level]: %msg%n</pattern>
+            <pattern>[%d{HH:mm:ss}][%thread][%logger{48}][%method:%line][%-5level]: %msg%n</pattern>
         </encoder>
     </appender>
 
     <root level="debug">
         <appender-ref ref="STDOUT" level="debug"/>
     </root>
+
+    <!-- Quiet down, libraries. -->
+    <logger name="io.netty" level="INFO"/>
+    <logger name="com.datastax.driver" level="INFO"/>
 </configuration>

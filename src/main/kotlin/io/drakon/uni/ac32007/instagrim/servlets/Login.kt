@@ -1,7 +1,7 @@
 package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
-import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import io.drakon.uni.ac32007.instagrim.lib.ext.redirectInContext
 import io.drakon.uni.ac32007.instagrim.models.User
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
@@ -16,13 +16,7 @@ import javax.servlet.http.HttpServletResponse
 @WebServlet(name = "Login", urlPatterns = arrayOf("/Login", "/Login/*"))
 class Login : HttpServlet() {
 
-    lateinit internal var cluster: Cluster
     private val log = LoggerFactory.getLogger(this.javaClass)
-
-    @Throws(ServletException::class)
-    override fun init(config: ServletConfig) {
-        cluster = CassandraHosts.getCluster()
-    }
 
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
 
@@ -30,7 +24,6 @@ class Login : HttpServlet() {
         val password = request.getParameter("password")
 
         val us = User()
-        us.setCluster(cluster)
         val isValid = us.IsValidUser(username, password)
         val session = request.session
         log.info("Session in servlet: {}", session)
