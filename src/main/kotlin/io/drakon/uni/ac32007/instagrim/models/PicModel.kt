@@ -27,10 +27,10 @@ class PicModel {
         val length = b.size
         val picid = Convertors.timeUUID
 
-        val thumbbuf = ThumbImg.process(b, types[1])
-        val thumblength = thumbbuf.size
-        val processedbuf = DecolourImg.process(b, types[1])
-        val processedlength = processedbuf.size
+        val thumbbuf = ByteBuffer.wrap(ThumbImg.process(b, types[1]))
+        val thumblength = thumbbuf.array().size
+        val processedbuf = ByteBuffer.wrap(DecolourImg.process(b, types[1]))
+        val processedlength = processedbuf.array().size
 
         val session = cluster.connect("instagrim")
         val psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)")

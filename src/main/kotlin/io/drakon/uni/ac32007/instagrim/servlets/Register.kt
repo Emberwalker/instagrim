@@ -2,6 +2,7 @@ package io.drakon.uni.ac32007.instagrim.servlets
 
 import com.datastax.driver.core.Cluster
 import io.drakon.uni.ac32007.instagrim.lib.CassandraHosts
+import io.drakon.uni.ac32007.instagrim.lib.ext.redirectInContext
 import io.drakon.uni.ac32007.instagrim.models.User
 import java.io.IOException
 import javax.servlet.ServletConfig
@@ -37,8 +38,12 @@ class Register : HttpServlet() {
         us.setCluster(cluster)
         us.RegisterUser(username, password)
 
-        response.sendRedirect("/Instagrim") // FIXME: Make relative to container root.
+        response.redirectInContext(request, "/")
+    }
 
+    override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
+        val rd = req.getRequestDispatcher("/WEB-INF/register.jsp")
+        rd.forward(req, resp)
     }
 
     /**
@@ -46,7 +51,7 @@ class Register : HttpServlet() {
      * @return a String containing servlet description
      */
     override fun getServletInfo(): String {
-        return "Short description" // FIXME: Change this.
+        return "User registration"
     }
 
 }

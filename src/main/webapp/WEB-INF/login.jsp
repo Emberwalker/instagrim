@@ -1,4 +1,4 @@
-<%-- 
+<%@ page import="io.drakon.uni.ac32007.instagrim.lib.ServletUtils" %><%--
     Document   : login.jsp
     Created on : Sep 28, 2014, 12:04:14 PM
     Author     : Administrator
@@ -21,7 +21,7 @@
         <nav>
             <ul>
                 
-                <li><a href="../Images/majed">Sample Images</a></li>
+                <li><a href="<%=ServletUtils.INSTANCE.getPathForHTML(request, "/Images/majed")%>">Sample Images</a></li>
             </ul>
         </nav>
        
@@ -39,7 +39,7 @@
         </article>
         <footer>
             <ul>
-                <li class="footer"><a href="../">Home</a></li>
+                <li class="footer"><a href="<%=ServletUtils.INSTANCE.getPathForHTML(request, "/")%>">Home</a></li>
             </ul>
         </footer>
     </body>

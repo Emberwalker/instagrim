@@ -1,3 +1,4 @@
+<%@ page import="io.drakon.uni.ac32007.instagrim.lib.ServletUtils" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,18 +14,18 @@
         </header>
         <nav>
             <ul>
-                <li><a href="./upload.jsp">Upload</a></li>
+                <li><a href="<%=ServletUtils.INSTANCE.getPathForHTML(request, "/Upload")%>">Upload</a></li>
                     <%  if ((boolean)request.getAttribute("loggedIn")) {  %>
-                <li><a href="./Images/<%=(String)request.getAttribute("username")%>">Your Images</a></li>
+                <li><a href="<%=ServletUtils.INSTANCE.getPathForHTML(request, "/Images/" + request.getAttribute("username"))%>">Your Images</a></li>
                     <%  } else {  %>
-                <li><a href="./register.jsp">Register</a></li>
-                <li><a href="./Login">Login</a></li>
+                <li><a href="<%=ServletUtils.INSTANCE.getPathForHTML(request, "/Register")%>">Register</a></li>
+                <li><a href="<%=ServletUtils.INSTANCE.getPathForHTML(request, "/Login")%>">Login</a></li>
                     <%  }  %>
             </ul>
         </nav>
         <footer>
             <ul>
-                <li class="footer"><a href="./">Home</a></li>
+                <li class="footer"><a href="<%=ServletUtils.INSTANCE.getPathForHTML(request, "/")%>">Home</a></li>
                 <li>&COPY; Andy C</li>
             </ul>
         </footer>

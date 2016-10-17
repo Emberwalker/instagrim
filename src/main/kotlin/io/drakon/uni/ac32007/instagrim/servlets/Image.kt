@@ -64,7 +64,7 @@ class Image : HttpServlet() {
         val tm = PicModel()
         tm.setCluster(cluster)
         val lsPics = tm.getPicsForUser(User)
-        val rd = request.getRequestDispatcher("/UsersPics.jsp")
+        val rd = request.getRequestDispatcher("/WEB-INF/UsersPics.jsp")
         request.setAttribute("Pics", lsPics)
         rd.forward(request, response)
 
@@ -121,7 +121,7 @@ class Image : HttpServlet() {
 
                 `is`.close()
             }
-            val rd = request.getRequestDispatcher("/upload.jsp")
+            val rd = request.getRequestDispatcher("/WEB-INF/upload.jsp")
             rd.forward(request, response)
         }
 

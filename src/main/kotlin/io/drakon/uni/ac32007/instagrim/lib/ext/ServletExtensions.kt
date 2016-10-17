@@ -1,5 +1,6 @@
 package io.drakon.uni.ac32007.instagrim.lib.ext
 
+import io.drakon.uni.ac32007.instagrim.lib.ServletUtils
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -16,6 +17,5 @@ import javax.servlet.http.HttpServletResponse
  * @param path The path to go to within the container
  */
 fun HttpServletResponse.redirectInContext(request: HttpServletRequest, path: String) {
-    val ctxPath = request.contextPath
-    this.sendRedirect("$ctxPath$path")
+    ServletUtils.redirectInContext(request, this, path)
 }
