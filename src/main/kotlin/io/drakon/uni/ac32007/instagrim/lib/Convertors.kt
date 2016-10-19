@@ -11,7 +11,8 @@ object Convertors {
     enum class DISPLAY(val id: Int) {
         IMAGE(0),
         THUMB(1),
-        PROCESSED(2)
+        PROCESSED(2),
+        INVERTED(3)
     }
 
     private val log = LoggerFactory.getLogger(this.javaClass)

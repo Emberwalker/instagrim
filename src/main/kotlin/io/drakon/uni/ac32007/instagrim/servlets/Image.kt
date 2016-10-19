@@ -29,7 +29,7 @@ class Image : HttpServlet() {
     )
     private val ImageTypes = arrayOf(
             "Greyscale" to Convertors.DISPLAY.PROCESSED,
-            //"Inverted" to Convertors.DISPLAY.INVERTED,
+            "Inverted" to Convertors.DISPLAY.INVERTED,
             "Raw" to Convertors.DISPLAY.IMAGE
     )
     private val log = LoggerFactory.getLogger(this.javaClass)

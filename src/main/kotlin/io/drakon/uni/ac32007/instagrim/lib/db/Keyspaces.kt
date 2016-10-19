@@ -14,11 +14,13 @@ object Keyspaces {
                     "  interaction_time timestamp,\n" +
                     "  title varchar,\n" +
                     "  image blob,\n" +
-                    "  thumb blob,\n" +
-                    "  processed blob,\n" +
                     "  imagelength int,\n" +
+                    "  thumb blob,\n" +
                     "  thumblength int,\n" +
+                    "  processed blob,\n" +
                     "  processedlength int,\n" +
+                    "  inverted blob,\n" +
+                    "  invertedlength int,\n" +
                     "  type  varchar,\n" +
                     "  name  varchar\n" +
                     ");",

@@ -3,6 +3,7 @@ package io.drakon.uni.ac32007.instagrim.models
 import com.datastax.driver.core.BoundStatement
 import com.datastax.driver.core.PreparedStatement
 import io.drakon.uni.ac32007.instagrim.img.DecolourImg
+import io.drakon.uni.ac32007.instagrim.img.InvertImg
 import io.drakon.uni.ac32007.instagrim.img.ThumbImg
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
 import io.drakon.uni.ac32007.instagrim.lib.db.CachedStatement
@@ -19,7 +20,7 @@ class PicModel {
     companion object {
         // CQL statements must be in the companion, to avoid being recomputed by each thread in the app server.
         // INSERT
-        private val cqlInsertPic = CachedStatement("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)")
+        private val cqlInsertPic = CachedStatement("insert into pics ( picid, image,thumb, processed, user, interaction_time, imagelength, thumblength, processedlength, type, name, inverted, invertedlength) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
         private val cqlInsertPicToUser = CachedStatement("insert into userpiclist ( picid, user, pic_added) values(?,?,?)")
 
         // SELECT
@@ -27,7 +28,8 @@ class PicModel {
         private val cqlDisplay = mapOf(
                 Convertors.DISPLAY.IMAGE to CachedStatement("select image,imagelength,type from pics where picid =?"),
                 Convertors.DISPLAY.THUMB to CachedStatement("select thumb,imagelength,thumblength,type from pics where picid =?"),
-                Convertors.DISPLAY.PROCESSED to CachedStatement("select processed,processedlength,type from pics where picid =?")
+                Convertors.DISPLAY.PROCESSED to CachedStatement("select processed,processedlength,type from pics where picid =?"),
+                Convertors.DISPLAY.INVERTED to CachedStatement("select inverted,invertedlength,type from pics where picid =?")
         )
     }
 
@@ -41,13 +43,15 @@ class PicModel {
         val thumblength = thumbbuf.array().size
         val processedbuf = ByteBuffer.wrap(DecolourImg.process(b, types[1]))
         val processedlength = processedbuf.array().size
+        val invertedbuf = ByteBuffer.wrap(InvertImg.process(b, types[1]))
+        val invertedlength = invertedbuf.array().size
 
         val session = Cassandra.getSession()
         val bsInsertPic = BoundStatement(cqlInsertPic.get(session))
         val bsInsertPicToUser = BoundStatement(cqlInsertPicToUser.get(session))
 
         val DateAdded = Date()
-        session.execute(bsInsertPic.bind(picid, buffer, thumbbuf, processedbuf, user, DateAdded, length, thumblength, processedlength, type, name))
+        session.execute(bsInsertPic.bind(picid, buffer, thumbbuf, processedbuf, user, DateAdded, length, thumblength, processedlength, type, name, invertedbuf, invertedlength))
         session.execute(bsInsertPicToUser.bind(picid, user, DateAdded))
     }
 
@@ -102,6 +106,10 @@ class PicModel {
                         Convertors.DISPLAY.PROCESSED -> {
                             bImage = row.getBytes("processed")
                             length = row.getInt("processedlength")
+                        }
+                        Convertors.DISPLAY.INVERTED -> {
+                            bImage = row.getBytes("inverted")
+                            length = row.getInt("invertedlength")
                         }
                     }
 
