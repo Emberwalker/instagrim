@@ -2,6 +2,7 @@ package io.drakon.uni.ac32007.instagrim.models
 
 import com.datastax.driver.core.BoundStatement
 import io.drakon.uni.ac32007.instagrim.lib.SimpleSHA1
+import io.drakon.uni.ac32007.instagrim.lib.db.CachedStatement
 import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
 import org.slf4j.LoggerFactory
 import java.io.UnsupportedEncodingException
@@ -10,6 +11,12 @@ import java.security.NoSuchAlgorithmException
 class User {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
+
+    companion object {
+        // CQL statements
+        val cqlInsertUser = CachedStatement("insert into userprofiles (login,password) Values(?,?)")
+        val cqlGetPasswordForUser = CachedStatement("select password from userprofiles where login =?")
+    }
 
     fun RegisterUser(username: String, Password: String): Boolean {
         val EncodedPassword: String
@@ -24,7 +31,7 @@ class User {
         }
 
         val session = Cassandra.getSession()
-        val ps = session.prepare("insert into userprofiles (login,password) Values(?,?)")
+        val ps = cqlInsertUser.get(session)
 
         val boundStatement = BoundStatement(ps)
         session.execute(// this is where the query is executed
@@ -48,7 +55,7 @@ class User {
         }
 
         val session = Cassandra.getSession()
-        val ps = session.prepare("select password from userprofiles where login =?")
+        val ps = cqlGetPasswordForUser.get(session)
         val boundStatement = BoundStatement(ps)
         val rs = session.execute(// this is where the query is executed
                 boundStatement.bind(// here you are binding the 'boundStatement'
