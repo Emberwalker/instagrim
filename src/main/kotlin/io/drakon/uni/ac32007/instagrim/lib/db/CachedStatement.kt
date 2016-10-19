@@ -43,4 +43,8 @@ class CachedStatement(private val query: String) {
         }
     }
 
+    fun String.toQuery(): CachedStatement {
+        return CachedStatement(this)
+    }
+
 }
