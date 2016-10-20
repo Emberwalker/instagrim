@@ -1,6 +1,8 @@
 package io.drakon.uni.ac32007.instagrim.control
 
+import ch.qos.logback.classic.LoggerContext
 import io.drakon.uni.ac32007.instagrim.lib.db.Cassandra
+import org.slf4j.LoggerFactory
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
 import javax.servlet.annotation.WebListener
@@ -39,7 +41,13 @@ class ServletManager : ServletContextListener {
      */
     override fun contextDestroyed(sce: ServletContextEvent) {
         Cassandra.close()
-        // TODO: Work out if we can kill off Netty's excess threads before exit to stop Tomcat whining.
+
+        // Work around issues with Logback during app server shutdown/undeploy
+        // See http://stackoverflow.com/q/16795299
+        val logFactory = LoggerFactory.getILoggerFactory()
+        if (logFactory is LoggerContext) {
+            logFactory.stop()
+        }
     }
 
 }

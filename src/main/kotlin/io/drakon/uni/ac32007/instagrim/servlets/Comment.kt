@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse
  */
 @WebServlet(urlPatterns = arrayOf("/Comment"))
 @MultipartConfig
-class Comment: HttpServlet() {
+class Comment : HttpServlet() {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
