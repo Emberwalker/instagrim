@@ -19,15 +19,7 @@ class CachedStatement(private val query: String) {
         return "CachedStatement[$query//$cache]"
     }
 
-    /**
-     * Get the prepared statement for the query this cache represents.
-     *
-     * This will create a new prepared statement if there isn't one already cached, and save it.
-     *
-     * @param session An active Cassandra cluster session.
-     * @return The prepared statement.
-     */
-    fun get(session: Session): PreparedStatement {
+    private fun get(session: Session): PreparedStatement {
         lock.withLock {
             var __cache = cache // Allow smart-casting by taking snapshot of 'cache'
             if (__cache != null) {
@@ -41,6 +33,18 @@ class CachedStatement(private val query: String) {
             log.debug("Cache filled: {}", this)
             return __cache
         }
+    }
+
+    /**
+     * Get the prepared statement for the query this cache represents.
+     *
+     * This will create a new prepared statement if there isn't one already cached, and save it.
+     *
+     * @param session An active Cassandra cluster session.
+     * @return The prepared statement.
+     */
+    operator fun invoke(session: Session): PreparedStatement {
+        return get(session)
     }
 
     fun String.toQuery(): CachedStatement {

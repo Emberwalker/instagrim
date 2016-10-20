@@ -2,6 +2,7 @@ package io.drakon.uni.ac32007.instagrim.servlets
 
 import io.drakon.uni.ac32007.instagrim.lib.Convertors
 import io.drakon.uni.ac32007.instagrim.lib.ServletUtils
+import io.drakon.uni.ac32007.instagrim.models.CommentModel
 import io.drakon.uni.ac32007.instagrim.models.PicModel
 import io.drakon.uni.ac32007.instagrim.stores.LoggedIn
 import io.drakon.uni.ac32007.instagrim.stores.Pic
@@ -56,8 +57,7 @@ class Image : HttpServlet() {
 
     @Throws(ServletException::class, IOException::class)
     private fun DisplayImageList(User: String, request: HttpServletRequest, response: HttpServletResponse) {
-        val tm = PicModel()
-        val lsPics = tm.getPicsForUser(User)
+        val lsPics = PicModel.getPicsForUser(User)
         val rd = request.getRequestDispatcher("/WEB-INF/UsersPics.jsp")
         request.setAttribute("Pics", lsPics)
         rd.forward(request, response)
@@ -65,7 +65,7 @@ class Image : HttpServlet() {
     }
 
     private fun getThumb(img: String, response: HttpServletResponse) {
-        val p = PicModel().getPic(Convertors.DISPLAY.THUMB, UUID.fromString(img))
+        val p = PicModel.getPic(Convertors.DISPLAY.THUMB, UUID.fromString(img))
         if (p is Pic) {
             writeImgToResponse(p, response)
         } else {
@@ -81,7 +81,7 @@ class Image : HttpServlet() {
             // Specific image type
             val displayType = ImageTypes.first { _args[1] == it.first }.second
             if (displayType is Convertors.DISPLAY) {
-                val p = PicModel().getPic(displayType, UUID.fromString(_args[2]))
+                val p = PicModel.getPic(displayType, UUID.fromString(_args[2]))
                 if (p is Pic) {
                     writeImgToResponse(p, response)
                 } else {
@@ -97,9 +97,9 @@ class Image : HttpServlet() {
             var imgType = 0
             val picUUID = _args[1]
 
-            if (PicModel().getPic(Convertors.DISPLAY.THUMB, UUID.fromString(picUUID)) !is Pic) {
+            if (PicModel.getPic(Convertors.DISPLAY.THUMB, UUID.fromString(picUUID)) !is Pic) {
                 response.status = 404
-                error("No such image")
+                error("No such image", response)
                 return
             }
 
@@ -122,6 +122,18 @@ class Image : HttpServlet() {
             if (imgType + 1 < ImageTypes.size) {
                 request.setAttribute("next", ServletUtils.getPathForHTML(request, "/Image/$picUUID?${imgType + 1}"))
             }
+
+            // Comments
+            request.setAttribute("comments", CommentModel.getCommentsForPic(UUID.fromString(picUUID)))
+            request.setAttribute("uuid", picUUID)
+
+            val lg = request.session.getAttribute("LoggedIn") as LoggedIn?
+            var loggedIn = false
+            if (lg != null && lg.loggedIn) {
+                loggedIn = true
+                request.setAttribute("username", lg.username!!)
+            }
+            request.setAttribute("loggedIn", loggedIn)
 
             val rd = request.getRequestDispatcher("/WEB-INF/image.jsp")
             rd.forward(request, response)
@@ -164,8 +176,7 @@ class Image : HttpServlet() {
                 val b = ByteArray(i + 1)
                 `is`.read(b)
                 log.debug("Length: {}", b.size)
-                val tm = PicModel()
-                tm.insertPic(b, type, filename, username)
+                PicModel.insertPic(b, type, filename, username)
 
                 `is`.close()
             }

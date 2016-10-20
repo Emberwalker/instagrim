@@ -13,25 +13,22 @@ import org.slf4j.LoggerFactory
 import java.nio.ByteBuffer
 import java.util.*
 
-class PicModel {
+object PicModel {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    companion object {
-        // CQL statements must be in the companion, to avoid being recomputed by each thread in the app server.
-        // INSERT
-        private val cqlInsertPic = CachedStatement("insert into pics ( picid, image,thumb, processed, user, interaction_time, imagelength, thumblength, processedlength, type, name, inverted, invertedlength) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
-        private val cqlInsertPicToUser = CachedStatement("insert into userpiclist ( picid, user, pic_added) values(?,?,?)")
+    // INSERT
+    private val cqlInsertPic = CachedStatement("insert into pics ( picid, image,thumb, processed, user, interaction_time, imagelength, thumblength, processedlength, type, name, inverted, invertedlength) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
+    private val cqlInsertPicToUser = CachedStatement("insert into userpiclist ( picid, user, pic_added) values(?,?,?)")
 
-        // SELECT
-        private val cqlUserPicListByUser = CachedStatement("select picid from userpiclist where user =?")
-        private val cqlDisplay = mapOf(
-                Convertors.DISPLAY.IMAGE to CachedStatement("select image,imagelength,type from pics where picid =?"),
-                Convertors.DISPLAY.THUMB to CachedStatement("select thumb,imagelength,thumblength,type from pics where picid =?"),
-                Convertors.DISPLAY.PROCESSED to CachedStatement("select processed,processedlength,type from pics where picid =?"),
-                Convertors.DISPLAY.INVERTED to CachedStatement("select inverted,invertedlength,type from pics where picid =?")
-        )
-    }
+    // SELECT
+    private val cqlUserPicListByUser = CachedStatement("select picid from userpiclist where user =?")
+    private val cqlDisplay = mapOf(
+            Convertors.DISPLAY.IMAGE to CachedStatement("select image,imagelength,type from pics where picid =?"),
+            Convertors.DISPLAY.THUMB to CachedStatement("select thumb,imagelength,thumblength,type from pics where picid =?"),
+            Convertors.DISPLAY.PROCESSED to CachedStatement("select processed,processedlength,type from pics where picid =?"),
+            Convertors.DISPLAY.INVERTED to CachedStatement("select inverted,invertedlength,type from pics where picid =?")
+    )
 
     fun insertPic(b: ByteArray, type: String, name: String, user: String) {
         val types = Convertors.SplitFiletype(type)
@@ -47,8 +44,8 @@ class PicModel {
         val invertedlength = invertedbuf.array().size
 
         val session = Cassandra.getSession()
-        val bsInsertPic = BoundStatement(cqlInsertPic.get(session))
-        val bsInsertPicToUser = BoundStatement(cqlInsertPicToUser.get(session))
+        val bsInsertPic = BoundStatement(cqlInsertPic(session))
+        val bsInsertPicToUser = BoundStatement(cqlInsertPicToUser(session))
 
         val DateAdded = Date()
         session.execute(bsInsertPic.bind(picid, buffer, thumbbuf, processedbuf, user, DateAdded, length, thumblength, processedlength, type, name, invertedbuf, invertedlength))
@@ -58,7 +55,7 @@ class PicModel {
     fun getPicsForUser(User: String): java.util.LinkedList<Pic>? {
         val Pics = java.util.LinkedList<Pic>()
         val session = Cassandra.getSession()
-        val boundStatement = BoundStatement(cqlUserPicListByUser.get(session))
+        val boundStatement = BoundStatement(cqlUserPicListByUser(session))
         val rs = session.execute(// this is where the query is executed
                 boundStatement.bind(// here you are binding the 'boundStatement'
                         User))
@@ -83,7 +80,7 @@ class PicModel {
         var type: String? = null
         var length = 0
         try {
-            val ps: PreparedStatement = cqlDisplay[image_type]!!.get(session)
+            val ps: PreparedStatement = cqlDisplay[image_type]!!(session)
             val boundStatement = BoundStatement(ps)
             val rs = session.execute(// this is where the query is executed
                     boundStatement.bind(// here you are binding the 'boundStatement'

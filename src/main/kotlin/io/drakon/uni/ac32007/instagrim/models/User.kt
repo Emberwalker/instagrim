@@ -31,7 +31,7 @@ class User {
         }
 
         val session = Cassandra.getSession()
-        val ps = cqlInsertUser.get(session)
+        val ps = cqlInsertUser(session)
 
         val boundStatement = BoundStatement(ps)
         session.execute(// this is where the query is executed
@@ -55,7 +55,7 @@ class User {
         }
 
         val session = Cassandra.getSession()
-        val ps = cqlGetPasswordForUser.get(session)
+        val ps = cqlGetPasswordForUser(session)
         val boundStatement = BoundStatement(ps)
         val rs = session.execute(// this is where the query is executed
                 boundStatement.bind(// here you are binding the 'boundStatement'
